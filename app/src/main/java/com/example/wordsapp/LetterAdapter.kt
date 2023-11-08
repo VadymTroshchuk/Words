@@ -96,3 +96,7 @@ class LetterAdapter :
         }
     }
 }
+
+class DetailActivity {
+
+}
