@@ -11,11 +11,22 @@ import com.example.wordsapp.databinding.FragmentWordListBinding
 
 class WordListFragment : Fragment() {
 
+    private lateinit var letterId: String
+
+
     private var _binding: FragmentWordListBinding? = null
     private val binding get() = _binding!!
     companion object {
         val LETTER = "letter"
         val SEARCH_PREFIX = "https://www.google.com/search?q="
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            letterId = it.getString(LETTER).toString()
+        }
     }
 
 
@@ -32,7 +43,7 @@ class WordListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = WordAdapter(activity?.intent?.extras?.getString(LETTER).toString(), requireContext())
+        recyclerView.adapter = WordAdapter(letterId, requireContext())
 
         recyclerView.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
