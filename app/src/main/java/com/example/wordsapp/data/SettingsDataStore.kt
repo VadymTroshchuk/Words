@@ -14,26 +14,14 @@ import java.io.IOException
 
 private const val LAYOUT_PREFERENCES_NAME = "layout_preferences"
 
-// Create a DataStore instance using the preferencesDataStore delegate, with the Context as
-// receiver.
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = LAYOUT_PREFERENCES_NAME
 )
 
-
-
-class SettingsDataStore(context: Context) {
-
-
+class SettingsDataStore(preference_datastore: DataStore<Preferences>) {
     private val IS_LINEAR_LAYOUT_MANAGER = booleanPreferencesKey("is_linear_layout_manager")
 
-    suspend fun saveLayoutToPreferencesStore(isLinearLayoutManager: Boolean, context: Context) {
-        context.dataStore.edit { preferences ->
-            preferences[IS_LINEAR_LAYOUT_MANAGER] = isLinearLayoutManager
-        }
-    }
-
-    val preferenceFlow: Flow<Boolean> = context.dataStore.data
+    val preferenceFlow: Flow<Boolean> = preference_datastore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -46,4 +34,10 @@ class SettingsDataStore(context: Context) {
             // On the first run of the app, we will use LinearLayoutManager by default
             preferences[IS_LINEAR_LAYOUT_MANAGER] ?: true
         }
+
+    suspend fun saveLayoutToPreferencesStore(isLinearLayoutManager: Boolean, context: Context) {
+        context.dataStore.edit { preferences ->
+            preferences[IS_LINEAR_LAYOUT_MANAGER] = isLinearLayoutManager
+        }
+    }
 }
